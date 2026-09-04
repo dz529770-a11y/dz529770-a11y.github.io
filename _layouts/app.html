@@ -26,7 +26,11 @@
         </div>
         <div class="app-hero-copy">
           <p class="eyebrow">{{ page.platform }}</p>
-          <h1>{{ page.title | replace: '-', '-<wbr>' }}</h1>
+          {% if page.title_line_1 and page.title_line_2 %}
+            <h1>{{ page.title_line_1 }}<br>{{ page.title_line_2 }}</h1>
+          {% else %}
+            <h1>{{ page.title }}</h1>
+          {% endif %}
           <p class="lead">{{ page.tagline }}</p>
           <div class="chip-row" aria-label="Информация о приложении">
             <span class="chip chip-accent">{{ page.status_label }}</span>
