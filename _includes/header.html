@@ -1,13 +1,20 @@
 <header class="site-header">
   <div class="shell header-inner">
-    <a class="brand" href="{{ '/' | relative_url }}" aria-label="На главную страницу">
-      <span class="brand-mark" aria-hidden="true">◆</span>
-      <span>Приложения DZ</span>
+    <a class="brand" href="{{ '/' | relative_url }}" aria-label="DZ Soft — на главную">
+      <span class="brand-mark" aria-hidden="true">DZ</span>
+      <span>DZ Soft</span>
     </a>
     <nav class="site-nav" aria-label="Основная навигация">
-      <a href="{{ '/' | relative_url }}">Все приложения</a>
-      <a href="{{ '/apps/krutanem/support/' | relative_url }}">Помощь</a>
+      <a class="{% if page.url == '/' %}is-active{% endif %}" href="{{ '/#catalog' | relative_url }}">Android</a>
+      <a href="{{ '/#catalog' | relative_url }}" data-header-filter="pc">ПК</a>
+      <a href="{{ '/#catalog' | relative_url }}" data-header-filter="web">Web</a>
+      <a href="https://github.com/dz529770-a11y" target="_blank" rel="noopener noreferrer">GitHub <span class="material-symbols-rounded nav-external" aria-hidden="true">open_in_new</span></a>
+      <a href="{{ '/#about' | relative_url }}">О проекте</a>
     </nav>
+    {% if page.body_class == 'home-page' %}
+      <button class="theme-toggle" type="button" aria-label="Переключить цветовую тему" data-theme-toggle>
+        <span class="material-symbols-rounded" aria-hidden="true">dark_mode</span>
+      </button>
+    {% endif %}
   </div>
 </header>
-

@@ -1,40 +1,122 @@
 ---
-title: "Приложения"
-description: "Официальный каталог Android-приложений: возможности, помощь, обновления и политика конфиденциальности."
+title: "DZ Soft — приложения и инструменты"
+description: "Полезные и красивые приложения DZ Soft для Android, ПК и веба. Возможности, помощь и официальные документы."
 body_class: home-page
+home_script: true
 ---
 
-<section class="shell home-hero">
-  <p class="eyebrow">Официальные страницы приложений</p>
-  <h1>Полезные инструменты,<br><span>которыми приятно пользоваться</span></h1>
-  <p class="lead">Здесь собраны описания, помощь, документы и актуальная информация о приложениях.</p>
-</section>
-
-<section class="shell catalog" aria-labelledby="catalog-title">
-  <div class="section-heading">
-    <div>
-      <p class="eyebrow">Каталог</p>
-      <h2 id="catalog-title">Приложения для Android</h2>
+<section class="home-stage" aria-labelledby="home-title">
+  <div class="shell landing-hero">
+    <div class="hero-intro">
+      <p class="hero-kicker">Полезные и красивые</p>
+      <h1 id="home-title">Приложения и инструменты,<br><span>которые делают жизнь проще.</span></h1>
+      <p class="hero-summary">Создаю удобные мобильные приложения для Android, инструменты для ПК и веб-сервисы. С вниманием к деталям, дизайну и реальной пользе.</p>
+      <div class="platform-list" aria-label="Направления разработки">
+        <span><span class="material-symbols-rounded" aria-hidden="true">android</span>Android</span>
+        <span><span class="material-symbols-rounded" aria-hidden="true">desktop_windows</span>ПК</span>
+        <span><span class="material-symbols-rounded" aria-hidden="true">language</span>Web</span>
+      </div>
     </div>
-    <p>Каталог будет пополняться новыми проектами.</p>
-  </div>
-  <div class="catalog-grid">
-    {% assign ordered_apps = site.apps | sort: 'order' %}
-    {% for app in ordered_apps %}
-      {% include app-card.html app=app %}
-    {% endfor %}
+
+    <article class="featured-app" aria-labelledby="featured-title">
+      <div class="featured-copy">
+        <p class="featured-label"><span class="material-symbols-rounded" aria-hidden="true">star</span>Рекомендуем</p>
+        <h2 id="featured-title">Крутанём!<br><span>Рулетка удачи</span></h2>
+        <div class="featured-tags" aria-label="Платформа и особенность">
+          <span><span class="material-symbols-rounded" aria-hidden="true">android</span>Android</span>
+          <span><span class="material-symbols-rounded" aria-hidden="true">casino</span>3D-кубики</span>
+        </div>
+        <p>Рулетка, фанты и задания для компании. Колесо решений, 23 сценария, кубики, музыка и режимы на любой случай.</p>
+        <div class="featured-actions">
+          <a class="home-button home-button-primary" href="{{ '/apps/krutanem/' | relative_url }}">О приложении <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span></a>
+          <span class="home-button home-button-muted" aria-label="APK пока не опубликован"><span class="material-symbols-rounded" aria-hidden="true">download</span>APK — скоро</span>
+          <span class="home-button home-button-muted" aria-label="Приложение готовится к публикации в RuStore">RuStore — скоро</span>
+        </div>
+      </div>
+      <div class="featured-visual" aria-hidden="true">
+        <img class="featured-wheel" src="{{ '/assets/images/apps/krutanem/logo.png' | relative_url }}" alt="" width="512" height="512">
+        <div class="featured-phone">
+          <img src="{{ '/assets/images/apps/krutanem/wheel.jpg' | relative_url }}" alt="" width="941" height="1672">
+        </div>
+      </div>
+    </article>
   </div>
 </section>
 
-<section class="shell principles" aria-labelledby="principles-title">
-  <div>
-    <p class="eyebrow">В одном месте</p>
-    <h2 id="principles-title">Понятно до установки</h2>
+<section class="shell home-catalog" id="catalog" aria-labelledby="catalog-title">
+  <div class="catalog-toolbar">
+    <div>
+      <h2 id="catalog-title">Каталог приложений</h2>
+      <div class="catalog-filters" aria-label="Фильтр по платформе">
+        <button class="filter-chip is-active" type="button" data-filter="all" aria-pressed="true">Все</button>
+        <button class="filter-chip" type="button" data-filter="android" aria-pressed="false">Android</button>
+        <button class="filter-chip" type="button" data-filter="pc" aria-pressed="false">ПК</button>
+        <button class="filter-chip" type="button" data-filter="web" aria-pressed="false">Web</button>
+      </div>
+    </div>
+    <label class="catalog-search">
+      <span class="sr-only">Поиск приложений</span>
+      <span class="material-symbols-rounded" aria-hidden="true">search</span>
+      <input type="search" placeholder="Поиск приложений…" data-catalog-search>
+    </label>
   </div>
-  <div class="principle-grid">
-    <article><strong>Возможности</strong><p>Честное описание функций и требований каждого приложения.</p></article>
-    <article><strong>Помощь</strong><p>Короткие ответы на вопросы без регистрации и лишних переходов.</p></article>
-    <article><strong>Конфиденциальность</strong><p>Отдельная актуальная политика для каждого продукта.</p></article>
+
+  <div class="home-card-grid" data-catalog-grid>
+    <article class="home-app-card home-app-card-current" data-platform="android" data-name="Крутанём рулетка удачи выбор кубики">
+      <a class="home-app-card-link" href="{{ '/apps/krutanem/' | relative_url }}" aria-label="Открыть страницу приложения «Крутанём! Рулетка удачи»">
+        <img class="home-app-icon" src="{{ '/assets/images/apps/krutanem/logo.png' | relative_url }}" alt="Логотип приложения «Крутанём!»" width="512" height="512">
+        <span class="platform-badge platform-android"><span class="material-symbols-rounded" aria-hidden="true">android</span>Android</span>
+        <h3>Крутанём! Рулетка удачи</h3>
+        <p>Рулетка, фанты, кубики и сценарии для весёлой компании.</p>
+        <span class="card-action">Подробнее <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span></span>
+      </a>
+    </article>
+
+    <article class="home-app-card is-concept" data-platform="android" data-name="трекер привычек концепт">
+      <img class="home-app-icon" src="{{ '/assets/images/apps/krutanem/fun-and-tasks.jpg' | relative_url }}" alt="Концепт иллюстрации будущего приложения" width="1672" height="941" loading="lazy">
+      <span class="platform-badge platform-android"><span class="material-symbols-rounded" aria-hidden="true">android</span>Android</span>
+      <h3>Трекер привычек</h3>
+      <p>Место для будущего проекта в каталоге DZ Soft.</p>
+      <span class="soon-label">Скоро</span>
+    </article>
+
+    <article class="home-app-card is-concept" data-platform="pc" data-name="органайзер задач концепт пк">
+      <img class="home-app-icon" src="{{ '/assets/images/apps/krutanem/wheel.jpg' | relative_url }}" alt="Концепт иллюстрации будущего приложения" width="941" height="1672" loading="lazy">
+      <span class="platform-badge platform-pc"><span class="material-symbols-rounded" aria-hidden="true">desktop_windows</span>ПК</span>
+      <h3>Органайзер задач</h3>
+      <p>Концепт карточки настольного приложения.</p>
+      <span class="soon-label">Скоро</span>
+    </article>
+
+    <article class="home-app-card is-concept" data-platform="web" data-name="веб инструмент сервис концепт">
+      <img class="home-app-icon" src="{{ '/assets/images/apps/krutanem/dice.jpg' | relative_url }}" alt="Концепт иллюстрации будущего веб-сервиса" width="941" height="1672" loading="lazy">
+      <span class="platform-badge platform-web"><span class="material-symbols-rounded" aria-hidden="true">language</span>Web</span>
+      <h3>Веб-инструмент</h3>
+      <p>Пример будущей страницы онлайн-сервиса.</p>
+      <span class="soon-label">Скоро</span>
+    </article>
+
+    <article class="home-app-card is-concept" data-platform="android" data-name="таймер секундомер концепт android">
+      <img class="home-app-icon" src="{{ '/assets/images/apps/krutanem/logo.png' | relative_url }}" alt="Концепт иллюстрации будущего Android-приложения" width="512" height="512" loading="lazy">
+      <span class="platform-badge platform-android"><span class="material-symbols-rounded" aria-hidden="true">android</span>Android</span>
+      <h3>Таймер и секундомер</h3>
+      <p>Ещё одна карточка для оценки будущего каталога.</p>
+      <span class="soon-label">Скоро</span>
+    </article>
   </div>
+  <p class="catalog-empty" data-catalog-empty hidden>По вашему запросу пока ничего не найдено.</p>
 </section>
 
+<section class="shell page-anatomy" id="about" aria-labelledby="anatomy-title">
+  <div class="anatomy-intro">
+    <h2 id="anatomy-title">Что внутри каждой<br>страницы приложения</h2>
+    <p>Каждое приложение получит понятную структуру, чтобы быстро найти всё необходимое.</p>
+  </div>
+  <div class="anatomy-grid">
+    <article><span class="material-symbols-rounded anatomy-icon" aria-hidden="true">description</span><h3>Подробное описание</h3><p>Возможности, скриншоты и ключевые особенности.</p></article>
+    <article><span class="material-symbols-rounded anatomy-icon" aria-hidden="true">help</span><h3>Справка</h3><p>Ответы на частые вопросы и понятные инструкции.</p></article>
+    <article><span class="material-symbols-rounded anatomy-icon" aria-hidden="true">verified_user</span><h3>Конфиденциальность</h3><p>Как обрабатываются данные и какие права есть у пользователя.</p></article>
+    <article><span class="material-symbols-rounded anatomy-icon" aria-hidden="true">download</span><h3>Скачать файл</h3><p>APK и установочные файлы, когда они будут опубликованы.</p></article>
+    <article><span class="material-symbols-rounded anatomy-icon" aria-hidden="true">link</span><h3>Ссылки на магазины</h3><p>RuStore и другие официальные площадки проекта.</p></article>
+  </div>
+</section>
