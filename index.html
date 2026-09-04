@@ -1,0 +1,40 @@
+---
+title: "Приложения"
+description: "Официальный каталог Android-приложений: возможности, помощь, обновления и политика конфиденциальности."
+body_class: home-page
+---
+
+<section class="shell home-hero">
+  <p class="eyebrow">Официальные страницы приложений</p>
+  <h1>Полезные инструменты,<br><span>которыми приятно пользоваться</span></h1>
+  <p class="lead">Здесь собраны описания, помощь, документы и актуальная информация о приложениях.</p>
+</section>
+
+<section class="shell catalog" aria-labelledby="catalog-title">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Каталог</p>
+      <h2 id="catalog-title">Приложения для Android</h2>
+    </div>
+    <p>Каталог будет пополняться новыми проектами.</p>
+  </div>
+  <div class="catalog-grid">
+    {% assign ordered_apps = site.apps | sort: 'order' %}
+    {% for app in ordered_apps %}
+      {% include app-card.html app=app %}
+    {% endfor %}
+  </div>
+</section>
+
+<section class="shell principles" aria-labelledby="principles-title">
+  <div>
+    <p class="eyebrow">В одном месте</p>
+    <h2 id="principles-title">Понятно до установки</h2>
+  </div>
+  <div class="principle-grid">
+    <article><strong>Возможности</strong><p>Честное описание функций и требований каждого приложения.</p></article>
+    <article><strong>Помощь</strong><p>Короткие ответы на вопросы без регистрации и лишних переходов.</p></article>
+    <article><strong>Конфиденциальность</strong><p>Отдельная актуальная политика для каждого продукта.</p></article>
+  </div>
+</section>
+

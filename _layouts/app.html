@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    {% include head.html %}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": {{ page.title | jsonify }},
+        "description": {{ page.description | jsonify }},
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Android {{ page.min_android }}",
+        "softwareVersion": {{ page.version | jsonify }},
+        "image": {{ page.icon | absolute_url | jsonify }},
+        "url": {{ page.url | absolute_url | jsonify }}
+      }
+    </script>
+  </head>
+  <body class="app-page">
+    <a class="skip-link" href="#content">Перейти к содержанию</a>
+    {% include header.html %}
+    <main id="content">
+      <section class="shell app-hero">
+        <div class="app-icon-wrap">
+          <img class="app-icon" src="{{ page.icon | relative_url }}" alt="Логотип приложения «{{ page.title }}»" width="512" height="512">
+        </div>
+        <div class="app-hero-copy">
+          <p class="eyebrow">{{ page.platform }}</p>
+          <h1>{{ page.title }}</h1>
+          <p class="lead">{{ page.tagline }}</p>
+          <div class="chip-row" aria-label="Информация о приложении">
+            <span class="chip chip-accent">{{ page.status_label }}</span>
+            <span class="chip">{{ page.min_android }}</span>
+            <span class="chip">Версия {{ page.version }}</span>
+          </div>
+          <div class="hero-actions">
+            {% if page.rustore_url %}
+              <a class="button button-primary" href="{{ page.rustore_url }}">Скачать в RuStore</a>
+            {% else %}
+              <span class="button button-muted" aria-label="Приложение готовится к публикации в RuStore">Скоро в RuStore</span>
+            {% endif %}
+            <a class="button button-secondary" href="{{ '/apps/krutanem/support/' | relative_url }}">Помощь</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="shell stat-grid" aria-label="Ключевые возможности">
+        <div><strong>23</strong><span>готовых колеса</span></div>
+        <div><strong>2–50</strong><span>вариантов в своём колесе</span></div>
+        <div><strong>1–5</strong><span>физических 3D-кубиков</span></div>
+        <div><strong>6</strong><span>стилей оформления</span></div>
+      </section>
+
+      <article class="shell rich-content">
+        {{ content }}
+      </article>
+
+      <section class="shell document-links" aria-labelledby="documents-title">
+        <div>
+          <p class="eyebrow">Документы и поддержка</p>
+          <h2 id="documents-title">Всё важное — рядом</h2>
+          <p>Подробная помощь, правила обработки данных и информация об обновлениях доступны без регистрации.</p>
+        </div>
+        <div class="document-grid">
+          <a href="{{ '/apps/krutanem/support/' | relative_url }}"><strong>Помощь</strong><span>Ответы по колёсам, звуку и кубикам</span></a>
+          <a href="{{ '/apps/krutanem/privacy/' | relative_url }}"><strong>Конфиденциальность</strong><span>Какие данные используются и где хранятся</span></a>
+          <a href="{{ '/apps/krutanem/changelog/' | relative_url }}"><strong>Обновления</strong><span>История изменений приложения</span></a>
+        </div>
+      </section>
+    </main>
+    {% include footer.html %}
+  </body>
+</html>
+

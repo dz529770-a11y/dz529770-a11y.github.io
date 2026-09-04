@@ -1,0 +1,29 @@
+title: "Приложения DZ"
+description: "Официальные страницы Android-приложений: возможности, помощь и политика конфиденциальности."
+lang: ru-RU
+url: "https://dz529770-a11y.github.io"
+baseurl: ""
+timezone: Europe/Moscow
+permalink: pretty
+
+collections:
+  apps:
+    output: true
+    permalink: /apps/:name/
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+      image: /assets/images/apps/krutanem/logo.png
+  - scope:
+      path: ""
+      type: apps
+    values:
+      layout: app
+
+exclude:
+  - README.md
+  - vendor
+

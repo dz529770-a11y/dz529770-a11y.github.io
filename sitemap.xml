@@ -1,0 +1,11 @@
+---
+layout: null
+permalink: /sitemap.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>{{ '/' | absolute_url }}</loc></url>
+  {% for app in site.apps %}<url><loc>{{ app.url | absolute_url }}</loc></url>{% endfor %}
+  {% for item in site.pages %}{% if item.url contains '/apps/' %}<url><loc>{{ item.url | absolute_url }}</loc></url>{% endif %}{% endfor %}
+</urlset>
+

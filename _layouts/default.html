@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    {% include head.html %}
+  </head>
+  <body class="{{ page.body_class | default: 'page' }}">
+    <a class="skip-link" href="#content">Перейти к содержанию</a>
+    {% include header.html %}
+    <main id="content">
+      {{ content }}
+    </main>
+    {% include footer.html %}
+  </body>
+</html>
+
