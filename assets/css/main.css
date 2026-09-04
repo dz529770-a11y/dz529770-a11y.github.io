@@ -226,7 +226,7 @@ p { margin: 0; }
   box-shadow: var(--shadow);
 }
 .app-icon { border-radius: 26%; }
-.app-hero-copy h1 { font-size: clamp(3rem, 6.5vw, 5.8rem); }
+.app-hero-copy h1 { overflow-wrap: anywhere; font-size: clamp(3rem, 6.5vw, 5.8rem); }
 .app-hero-copy .lead { max-width: 690px; margin-top: 24px; }
 
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
