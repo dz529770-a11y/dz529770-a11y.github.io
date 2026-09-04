@@ -10,10 +10,10 @@
       <nav class="breadcrumbs" aria-label="Хлебные крошки">
         <a href="{{ '/' | relative_url }}">Приложения</a>
         <span aria-hidden="true">/</span>
-        <a href="{{ '/apps/krutanem/' | relative_url }}">Крутанём!</a>
+        <a href="{{ '/apps/' | append: page.app_slug | append: '/' | relative_url }}">{{ page.app_title }}</a>
       </nav>
       <header class="document-header">
-        <p class="eyebrow">{{ page.kicker | default: 'Крутанём! Рулетка удачи' }}</p>
+        <p class="eyebrow">{{ page.kicker | default: page.app_title }}</p>
         <h1>{{ page.title }}</h1>
         {% if page.updated %}<p class="updated">Дата редакции: {{ page.updated }}</p>{% endif %}
       </header>
@@ -24,4 +24,3 @@
     {% include footer.html %}
   </body>
 </html>
-

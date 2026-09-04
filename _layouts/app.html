@@ -39,16 +39,15 @@
             {% else %}
               <span class="button button-muted" aria-label="Приложение готовится к публикации в RuStore">Скоро в RuStore</span>
             {% endif %}
-            <a class="button button-secondary" href="{{ '/apps/krutanem/support/' | relative_url }}">Помощь</a>
+            <a class="button button-secondary" href="{{ '/apps/' | append: page.slug | append: '/support/' | relative_url }}">Помощь</a>
           </div>
         </div>
       </section>
 
       <section class="shell stat-grid" aria-label="Ключевые возможности">
-        <div><strong>23</strong><span>готовых колеса</span></div>
-        <div><strong>2–50</strong><span>вариантов в своём колесе</span></div>
-        <div><strong>1–5</strong><span>физических 3D-кубиков</span></div>
-        <div><strong>6</strong><span>стилей оформления</span></div>
+        {% for stat in page.stats %}
+          <div><strong>{{ stat.value }}</strong><span>{{ stat.label }}</span></div>
+        {% endfor %}
       </section>
 
       <article class="shell rich-content">
@@ -62,13 +61,12 @@
           <p>Подробная помощь, правила обработки данных и информация об обновлениях доступны без регистрации.</p>
         </div>
         <div class="document-grid">
-          <a href="{{ '/apps/krutanem/support/' | relative_url }}"><strong>Помощь</strong><span>Ответы по колёсам, звуку и кубикам</span></a>
-          <a href="{{ '/apps/krutanem/privacy/' | relative_url }}"><strong>Конфиденциальность</strong><span>Какие данные используются и где хранятся</span></a>
-          <a href="{{ '/apps/krutanem/changelog/' | relative_url }}"><strong>Обновления</strong><span>История изменений приложения</span></a>
+          <a href="{{ '/apps/' | append: page.slug | append: '/support/' | relative_url }}"><strong>Помощь</strong><span>{{ page.support_summary | default: 'Инструкции и ответы на частые вопросы' }}</span></a>
+          <a href="{{ '/apps/' | append: page.slug | append: '/privacy/' | relative_url }}"><strong>Конфиденциальность</strong><span>Какие данные используются и где хранятся</span></a>
+          <a href="{{ '/apps/' | append: page.slug | append: '/changelog/' | relative_url }}"><strong>Обновления</strong><span>История изменений приложения</span></a>
         </div>
       </section>
     </main>
     {% include footer.html %}
   </body>
 </html>
-

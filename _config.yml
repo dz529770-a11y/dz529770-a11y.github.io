@@ -16,7 +16,7 @@ defaults:
       path: ""
     values:
       layout: default
-      image: /assets/images/apps/krutanem/logo.png
+      image: /assets/images/site-icon.svg
   - scope:
       path: ""
       type: apps
@@ -26,4 +26,3 @@ defaults:
 exclude:
   - README.md
   - vendor
-
