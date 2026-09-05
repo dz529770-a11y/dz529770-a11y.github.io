@@ -20,17 +20,17 @@
     <a class="skip-link" href="#content">Перейти к содержанию</a>
     {% include header.html %}
     <main id="content">
+      <nav class="shell app-navigation" aria-label="Навигация по приложению">
+        <a href="{{ '/#catalog' | relative_url }}">← Все приложения</a>
+        <div><a href="#overview">Обзор</a><a href="#documents-title">Поддержка и документы</a></div>
+      </nav>
       <section class="shell app-hero">
         <div class="app-icon-wrap">
           <img class="app-icon" src="{{ page.icon | relative_url }}" alt="Логотип приложения «{{ page.title }}»" width="512" height="512">
         </div>
         <div class="app-hero-copy">
           <p class="eyebrow">{{ page.platform }}</p>
-          {% if page.title_line_1 and page.title_line_2 %}
-            <h1>{{ page.title_line_1 }}<br>{{ page.title_line_2 }}{% if page.title_line_3 %}<br>{{ page.title_line_3 }}{% endif %}</h1>
-          {% else %}
-            <h1>{{ page.title }}</h1>
-          {% endif %}
+          <h1>{{ page.title }}</h1>
           <p class="lead">{{ page.tagline }}</p>
           <div class="chip-row" aria-label="Информация о приложении">
             <span class="chip chip-accent">{{ page.status_label }}</span>
@@ -54,7 +54,7 @@
         {% endfor %}
       </section>
 
-      <article class="shell rich-content">
+      <article id="overview" class="shell rich-content">
         {{ content }}
       </article>
 
