@@ -1,7 +1,8 @@
 ---
 title: "DocScanner-Сканер документов"
 title_line_1: "DocScanner-"
-title_line_2: "Сканер документов"
+title_line_2: "Сканер"
+title_line_3: "документов"
 slug: docscanner
 order: 2
 platform: "Приложение для Android"
