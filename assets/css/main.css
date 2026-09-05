@@ -749,8 +749,8 @@ html[data-theme="light"] .home-page {
 .home-app-card-link:hover .home-app-icon { transform: scale(1.05); }
 
 .home-app-icon {
-  width: 43px;
-  height: 43px;
+  width: 86px;
+  height: 86px;
   margin-bottom: 10px;
   border: 1px solid rgba(158, 138, 239, 0.25);
   border-radius: 12px;
@@ -768,7 +768,7 @@ html[data-theme="light"] .home-page {
 .platform-badge {
   position: absolute;
   top: 14px;
-  left: 64px;
+  left: 108px;
   display: inline-flex;
   align-items: center;
   gap: 4px;
