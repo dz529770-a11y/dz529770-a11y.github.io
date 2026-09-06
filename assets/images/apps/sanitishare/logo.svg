@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">SanitiShare</title>
+  <desc id="desc">Бирюзовый щит с отметкой на тёмно-синем фоне</desc>
+  <rect width="512" height="512" rx="112" fill="#0B1220"/>
+  <path d="M256 92 382 140v97c0 87-53 145-126 179-73-34-126-92-126-179v-97z" fill="#20BFA3"/>
+  <path d="m197 247 43 43 80-85" fill="none" stroke="#0B1220" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m407 72 10 29 29 10-29 10-10 29-10-29-29-10 29-10z" fill="#20BFA3"/>
+</svg>
