@@ -1006,7 +1006,7 @@ body { font-family: Manrope, ui-sans-serif, system-ui, -apple-system, BlinkMacSy
 }
 @media (max-width: 540px) {
   .app-navigation { flex-wrap: wrap; padding-top: 8px; gap: 0; }
-  .app-navigation div { gap: 18px; }
+  .app-navigation div { max-width: 100%; gap: 18px; overflow-x: auto; }
   .app-hero { grid-template-columns: 1fr; gap: 18px; padding-block: 16px 28px; }
   .app-icon-wrap { width: 80px; }
   .app-hero-copy h1 { font-size: 1.9rem; }
@@ -1016,7 +1016,7 @@ body { font-family: Manrope, ui-sans-serif, system-ui, -apple-system, BlinkMacSy
   .feature-grid { grid-template-columns: 1fr; }
   .feature-grid section { padding: 20px; }
   .rich-content > h2 { margin-top: 32px; }
-  .showcase-grid { gap: 10px; }
+  .showcase-grid { grid-template-columns: 1fr; gap: 10px; }
   .showcase { border-radius: 12px; }
   .document-links { padding: 22px; }
   .home-card-grid { grid-template-columns: 1fr; }
@@ -1031,6 +1031,10 @@ body { font-family: Manrope, ui-sans-serif, system-ui, -apple-system, BlinkMacSy
   .hero-intro h1 { font-size: 2rem; }
   .site-nav { gap: 18px; }
   .site-nav a { font-size: 0.85rem; }
+}
+
+@media (max-width: 390px) {
+  .app-hero-copy .hero-actions { grid-template-columns: 1fr; }
 }
 .showcase a { display: block; cursor: zoom-in; }
 .showcase a:focus-visible { outline-offset: -4px; }
