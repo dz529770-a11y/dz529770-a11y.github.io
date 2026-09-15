@@ -63,12 +63,9 @@ DocScanner помогает быстро перевести бумажный д�
   </figure>
 </div>
 
-## Обработка, OCR и экспорт
+## Экспорт и отправка
 
 <div class="showcase-grid">
-  <figure class="showcase">
-    <img src="{{ '/assets/images/apps/docscanner/ocr.png' | relative_url }}" alt="Поиск по названию и распознанному тексту в DocScanner" width="941" height="1672" loading="lazy">
-  </figure>
   <figure class="showcase">
     <img src="{{ '/assets/images/apps/docscanner/share.png' | relative_url }}" alt="Экспорт документов в PDF, JPG и PNG в DocScanner" width="941" height="1672" loading="lazy">
   </figure>
