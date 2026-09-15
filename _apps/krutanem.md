@@ -9,8 +9,9 @@ icon: /assets/images/apps/krutanem/logo.png
 image: /assets/images/apps/krutanem/logo.png
 min_android: "Android 7.0+"
 version: "1.0.0"
-status_label: "Готовится к публикации"
+status_label: "Доступно в RuStore"
 theme_color: "#512da8"
+rustore_url: "https://www.rustore.ru/catalog/app/com.zalen1978.randomizer"
 stats:
   - value: "23"
     label: "готовых колеса"
