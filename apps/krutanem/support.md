@@ -5,7 +5,7 @@ description: "Ответы на частые вопросы по колёсам,
 permalink: /apps/krutanem/support/
 updated: "4 сентября 2026 года"
 app_slug: krutanem
-app_title: "Крутанём! Рулетка удачи"
+app_title: "Крутанём! Рандомайзер"
 ---
 
 ## Как начать

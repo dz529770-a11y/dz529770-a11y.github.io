@@ -1,11 +1,11 @@
 ---
 layout: document
 title: "История обновлений"
-description: "История версий приложения «Крутанём! Рулетка удачи»."
+description: "История версий приложения «Крутанём! Рандомайзер»."
 permalink: /apps/krutanem/changelog/
 updated: "4 сентября 2026 года"
 app_slug: krutanem
-app_title: "Крутанём! Рулетка удачи"
+app_title: "Крутанём! Рандомайзер"
 ---
 
 ## Версия 1.0.0
