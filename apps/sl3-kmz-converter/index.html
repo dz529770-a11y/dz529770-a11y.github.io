@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SL3-KMZ Converter — веб-приложение</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #070a17; color: #f7f7ff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; padding: 0 24px 24px; background: radial-gradient(circle at 20% 0%, #17234c, #070a17 55%); }
+    header { width: min(960px, 100%); margin: 0 auto; padding: 18px 0; display: flex; align-items: center; justify-content: space-between; }
+    .site-brand { display: inline-flex; align-items: center; gap: 10px; color: #f7f7ff; text-decoration: none; font-weight: 700; }
+    .site-brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; color: #fff; background: linear-gradient(135deg, #7957e8, #25bddc); font-size: 12px; }
+    .home-link { color: #b9bdd4; text-decoration: none; }
+    .home-link:hover { color: #fff; }
+    main { width: min(720px, 100%); margin: 48px auto 0; padding: 36px; border: 1px solid rgba(180,166,255,.24); border-radius: 24px; background: rgba(20,25,54,.82); box-shadow: 0 24px 80px rgba(0,0,0,.35); }
+    .brand { display: flex; gap: 16px; align-items: center; }
+    .brand img { width: 64px; height: 64px; }
+    h1 { margin: 0; font-size: clamp(28px, 6vw, 48px); }
+    p { color: #b9bdd4; line-height: 1.6; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    a { display: inline-block; padding: 12px 18px; border-radius: 10px; text-decoration: none; color: inherit; border: 1px solid rgba(180,166,255,.28); }
+    a.primary { background: #6d58cf; border-color: #a98bff; }
+    ul { padding-left: 22px; color: #d9d9ed; line-height: 1.8; }
+    small { color: #8589a8; }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="site-brand" href="/"><span class="site-brand-mark">GZ</span><span>GZSoft</span></a>
+    <a class="home-link" href="/">← На главную</a>
+  </header>
+  <main>
+    <div class="brand">
+      <img src="/assets/images/site-icon.svg" alt="">
+      <div><h1>SL3-KMZ Converter</h1><small>Web-приложение для Lowrance SL2/SL3</small></div>
+    </div>
+    <p>Постройте геопривязанную мозаику sidescan-сонаров прямо в браузере. Файлы обрабатываются локально и не отправляются на сервер.</p>
+    <ul>
+      <li>просмотр мозаики на геокарте;</li>
+      <li>сайдскан и глубина по пингам;</li>
+      <li>выбор участка трека;</li>
+      <li>экспорт KMZ или PNG + PGW + PRJ.</li>
+    </ul>
+    <div class="actions">
+      <a class="primary" href="web/">Открыть приложение</a>
+      <a href="/">Вернуться на сайт</a>
+    </div>
+  </main>
+</body>
+</html>
