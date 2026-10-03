@@ -6,6 +6,9 @@ baseurl: ""
 timezone: Europe/Moscow
 permalink: pretty
 
+# Номер счётчика Яндекс.Метрики (metrika.yandex.ru)
+yandex_metrika: "113354911"
+
 collections:
   apps:
     output: true
