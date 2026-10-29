@@ -1,10 +1,10 @@
 ---
 name: SonarRelay
 slug: sonarrelay
-short_description: "Просмотр экрана и управление совместимым MDF эхолотом Lowrance по Wi‑Fi"
-description: "RTSP-трансляция экрана эхолота, TCP-команды, сенсорное управление, ping устройства и сохранение снимков."
+short_description: "Просмотр экрана и управление совместимым эхолотом Lowrance по Wi‑Fi"
+description: "RTSP-видео, сенсорное управление, страницы, масштаб, путевые точки, настройки изображения и видеобуфера. Совместимость проверена с Lowrance Elite FS 9."
 version: "1.0"
-updated: "30 августа 2026"
+updated: "27 сентября 2026"
 category: "Полезные инструменты"
 downloads: "до 1 тыс."
 age: "0+"
