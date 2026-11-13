@@ -7,9 +7,9 @@
   // ===================== КОНФИГ =====================
   // URL сервиса Web Push (push-server/worker.js). Пусто = push отключён,
   // уведомления при закрытом сайте работают через Periodic Background Sync.
-  const PUSH_SERVER_URL = '';
+  const PUSH_SERVER_URL = 'https://siz-push.dz529770.workers.dev';
   // Публичный VAPID-ключ (base64url) — генерируется вместе с приватным (см. push-server/README.md)
-  const PUSH_PUBLIC_KEY = '';
+  const PUSH_PUBLIC_KEY = 'BHgr8Y1ZvApiBa4aiJfaRdRX5nvJhLIGNTTSshgeTgvPbbR4hotEWH_ehAZvv_giYRTgE2oKAR3ljhpOzzff_3Q';
 
   // Доп. строки, которых нет в Android strings.xml
   const EXTRA = {
