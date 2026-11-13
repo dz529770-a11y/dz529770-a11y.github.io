@@ -1,0 +1,259 @@
+/* SIZ Tracker — стили, повторяющие Android-версию */
+:root {
+  --header: #2c3e50;
+  --title: #f39c12;
+  --subtitle: #ecf0f1;
+  --bg: #f5f6fa;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --text2: #6b7280;
+  --hint: #9ca3af;
+  --divider: #e5e7eb;
+  --blue: #3b82f6;
+  --green: #22c55e;
+  --red: #ef4444;
+  --stats: #34495e;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Roboto, "Segoe UI", Arial, sans-serif;
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+body { display: flex; flex-direction: column; }
+
+/* ---------- Шапка ---------- */
+#appbar {
+  display: flex; align-items: center;
+  background: var(--header);
+  padding: 10px 8px 10px 14px;
+  padding-top: calc(10px + env(safe-area-inset-top));
+  color: #fff;
+  flex: 0 0 auto;
+  position: sticky; top: 0; z-index: 50;
+}
+#appLogo { width: 40px; height: 40px; border-radius: 50%; margin-right: 12px; }
+.appbar-titles { flex: 1; min-width: 0; }
+.appbar-title { color: var(--title); font-size: 20px; font-weight: bold; line-height: 1.15; }
+.appbar-subtitle { color: var(--subtitle); font-size: 13px; }
+
+.icon-btn {
+  background: none; border: none; color: #fff;
+  width: 44px; height: 44px; padding: 10px;
+  cursor: pointer; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.icon-btn:active { background: rgba(255,255,255,.15); }
+.icon-btn.dark { color: #b71c1c; }
+
+/* ---------- Основной экран ---------- */
+#main {
+  flex: 1; display: flex; flex-direction: column;
+  padding: 6px 12px 12px;
+  overflow: hidden;
+  max-width: 720px; width: 100%; margin: 0 auto;
+}
+
+.btn {
+  border: none; border-radius: 8px; cursor: pointer;
+  font-size: 16px; font-weight: bold; color: #fff;
+  padding: 14px 16px; min-height: 52px;
+}
+.btn:active { filter: brightness(.92); }
+.btn-pill { border-radius: 28px; background: var(--blue); margin: 6px 0; }
+.btn-blue { background: var(--blue); }
+.btn-green { background: var(--green); }
+
+.btn-row { display: flex; gap: 12px; margin: 4px 0 8px; }
+.btn-row .btn { flex: 1; }
+
+#searchWrap { margin: 0 4px 6px; }
+#searchInput {
+  width: 100%; padding: 12px 14px; font-size: 16px;
+  border: 1px solid var(--divider); border-radius: 24px;
+  background: #fff; outline: none;
+}
+#searchInput:focus { border-color: var(--blue); }
+
+#stats {
+  background: var(--stats); color: #fff;
+  text-align: center; font-size: 14px; font-weight: bold;
+  padding: 12px; border-radius: 8px; margin: 0 4px 8px;
+}
+
+#empty {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  color: var(--text2); font-size: 18px; text-align: center;
+  white-space: pre-line; padding: 24px;
+}
+
+#list { flex: 1; overflow-y: auto; list-style: none; margin: 0; padding: 4px; }
+
+/* ---------- Карточка СИЗ ---------- */
+.siz-card {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--card); border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.12);
+  padding: 14px; margin: 8px 4px;
+  cursor: pointer; user-select: none;
+  transition: box-shadow .15s;
+}
+.siz-card:active { box-shadow: 0 0 0 2px var(--blue); }
+.siz-card.submitted { opacity: .6; }
+.siz-card img.item-icon { width: 56px; height: 56px; border-radius: 50%; flex: 0 0 auto; }
+.siz-main { flex: 1; min-width: 0; }
+.siz-name { font-size: 16px; font-weight: bold; line-height: 1.25; }
+.siz-sub { display: flex; align-items: center; margin-top: 4px; gap: 8px; }
+.siz-meta { flex: 1; min-width: 0; }
+.siz-number { color: var(--text2); font-size: 12px; }
+.siz-date { font-size: 14px; }
+.days-label { color: var(--text2); font-size: 12px; }
+.days-badge {
+  color: #fff; font-size: 13px; font-weight: bold;
+  padding: 4px 10px; border-radius: 6px; min-width: 20px; text-align: center;
+}
+.siz-status { color: var(--blue); font-size: 12px; font-weight: bold; }
+
+/* ---------- Всплывающие меню ---------- */
+.popup {
+  position: fixed; z-index: 300;
+  background: #fff; border-radius: 8px; min-width: 200px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  padding: 6px 0; overflow: hidden;
+}
+.popup .mi {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; font-size: 15px; cursor: pointer;
+  color: var(--text);
+}
+.popup .mi:active, .popup .mi:hover { background: #f1f5f9; }
+.popup .mi svg { flex: 0 0 auto; opacity: .8; }
+.popup .mi.danger { color: var(--red); }
+.hidden { display: none !important; }
+
+/* ---------- Модальные окна ---------- */
+.modal-back {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(0,0,0,.45);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.modal {
+  background: #fff; border-radius: 12px; width: 100%; max-width: 480px;
+  max-height: 86vh; overflow-y: auto; padding: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+}
+.modal h2 { margin: 0 0 16px; font-size: 20px; color: var(--header); text-align: center; }
+.modal .msg { font-size: 15px; color: var(--text); margin-bottom: 16px; white-space: pre-line; }
+.modal .msg b { color: var(--text); }
+
+.field-label { font-size: 14px; margin: 0 0 4px; }
+.field-input {
+  width: 100%; font-size: 18px; padding: 14px;
+  border: 1px solid var(--divider); border-radius: 8px;
+  margin-bottom: 14px; outline: none; background: #fafafa;
+}
+.field-input:focus { border-color: var(--blue); }
+.field-input.error { border-color: var(--red); }
+.field-hint { font-size: 12px; color: var(--hint); margin: -8px 0 16px; }
+.field-error { font-size: 13px; color: var(--red); margin: -8px 0 12px; }
+
+.btn-row-modal { display: flex; gap: 12px; margin-top: 8px; }
+.btn-row-modal .btn { flex: 1; }
+.btn-outline { background: #fff; color: var(--text2); border: 1px solid var(--divider); }
+.btn-red { background: var(--red); }
+
+/* Строка настройки */
+.set-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 8px; cursor: pointer; border-radius: 6px;
+}
+.set-row:active, .set-row:hover { background: #f1f5f9; }
+.set-row .set-icon { width: 24px; height: 24px; flex: 0 0 auto; color: var(--blue); }
+.set-row .set-icon.red { color: var(--red); }
+.set-row .set-icon.green { color: var(--green); }
+.set-row .set-text { flex: 1; min-width: 0; }
+.set-row .set-title { font-size: 16px; }
+.set-row .set-value { font-size: 13px; color: var(--text2); margin-top: 2px; }
+.set-row .set-title.red { color: var(--red); }
+.set-divider { height: 1px; background: var(--divider); margin: 0 8px; }
+
+/* Список выбора (radio) */
+.choice-list { display: flex; flex-direction: column; }
+.choice-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 8px; font-size: 16px; cursor: pointer; border-radius: 6px;
+}
+.choice-item:active, .choice-item:hover { background: #f1f5f9; }
+.choice-item .radio {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--text2); flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+}
+.choice-item.sel .radio { border-color: var(--blue); }
+.choice-item.sel .radio::after {
+  content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--blue);
+}
+.choice-item .flag { font-size: 22px; }
+
+/* ---------- Полноэкранное оповещение ---------- */
+#alertScreen {
+  position: fixed; inset: 0; z-index: 500;
+  background: #f5f5f5;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 16px; padding-top: calc(16px + env(safe-area-inset-top));
+}
+.alert-card {
+  width: 100%; max-width: 520px;
+  background: #fff; border-radius: 8px; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+.alert-head {
+  display: flex; align-items: center; gap: 12px;
+  background: #e8e8e8; padding: 16px;
+}
+.alert-head img { width: 48px; height: 48px; border-radius: 50%; }
+.alert-title { color: #b71c1c; font-size: 24px; font-weight: bold; }
+.alert-subtitle { color: #b71c1c; font-size: 14px; }
+.alert-head .icon-btn { margin-left: auto; }
+.alert-body { padding: 24px; text-align: center; }
+.alert-body img { width: 110px; height: 110px; margin-bottom: 14px; border-radius: 50%; }
+#alertName { font-size: 24px; font-weight: bold; margin-bottom: 6px; }
+#alertNumber { font-size: 20px; margin-bottom: 14px; }
+#alertDays { font-size: 18px; margin-bottom: 14px; }
+.alert-body hr { border: none; border-top: 1px solid #e0e0e0; margin: 0 0 14px; }
+#alertProgress { color: #666; font-size: 16px; }
+.alert-btns { display: flex; gap: 16px; background: #e8e8e8; padding: 16px; }
+.alert-btn {
+  flex: 1; border: none; border-radius: 4px; cursor: pointer;
+  color: #fff; font-size: 13px; font-weight: bold;
+  padding: 14px 8px; min-height: 56px; white-space: pre-line; line-height: 1.3;
+}
+.alert-btn.green { background: #2e7d32; }
+.alert-btn.red { background: #c62828; }
+#alertNote { margin-top: 16px; color: #666; font-size: 12px; text-align: center; }
+
+/* ---------- Тост ---------- */
+#toast {
+  position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
+  background: #323232; color: #fff; padding: 12px 20px;
+  border-radius: 24px; font-size: 14px; z-index: 600;
+  max-width: 90vw; text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,.3);
+}
+
+/* ---------- Справка ---------- */
+.help-body { font-size: 14px; line-height: 1.6; }
+.help-body .h { font-size: 18px; }
+
+/* Планшеты / десктоп */
+@media (min-width: 700px) {
+  #main { padding: 12px 24px; }
+  .siz-card img.item-icon { width: 64px; height: 64px; }
+}
