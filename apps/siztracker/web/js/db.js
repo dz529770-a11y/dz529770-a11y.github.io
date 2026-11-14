@@ -19,7 +19,9 @@
     warning_days: 5,
     ringtone: 'default',  // 'default' | 'siren' | 'beep'
     long_notification: true,
-    language: ''          // '' = авто (из браузера)
+    language: '',         // '' = авто (из браузера)
+    backup_enabled: false,
+    backup_code: ''       // код восстановления облачной копии
   };
 
   let cache = null;

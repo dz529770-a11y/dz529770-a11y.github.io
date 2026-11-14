@@ -1,6 +1,6 @@
 // SIZ Tracker — веб-версия (PWA)
 // Порт MainActivity + AlertActivity + ViewModel + Repository
-/* global SIZ_I18N, SIZ_t, SizCore, SizDB */
+/* global SIZ_I18N, SIZ_t, SizCore, SizDB, SizBackup */
 (function () {
   'use strict';
 
@@ -25,7 +25,22 @@
       check_scheduled: 'Проверка будет выполняться в %1$s:%2$s',
       warn_set: 'Предупреждения за %1$s дн. до испытания',
       day_1: '%1$s день', day_24: '%1$s дня', day_5: '%1$s дней',
-      ios_hint: 'На iPhone: установите приложение на экран «Домой» (Поделиться → На экран «Домой»), иначе уведомления не работают'
+      ios_hint: 'На iPhone: установите приложение на экран «Домой» (Поделиться → На экран «Домой»), иначе уведомления не работают',
+      backup_title: 'Облачная копия', backup_on: 'Включена', backup_off: 'Выключена',
+      backup_desc: 'Зашифрованная копия реестра на сервере уведомлений. Сервер видит только шифр — восстановление возможно по коду восстановления.',
+      backup_enable: 'Включить', backup_disable: 'Отключить', backup_show_code: 'Показать код',
+      backup_restore: 'Восстановить из облака', backup_restore_code: 'Восстановить по коду',
+      backup_code_title: 'Код восстановления',
+      backup_code_msg: 'Запишите код и храните отдельно от устройства — без него копию не восстановить:',
+      backup_enter_code: 'Введите код восстановления',
+      backup_copy: 'Копировать', copied: 'Скопировано',
+      backup_uploaded: 'Копия сохранена в облаке', backup_failed: 'Не удалось сохранить копию в облаке',
+      backup_not_found: 'Копия не найдена или код неверный', backup_invalid_code: 'Неверный формат кода',
+      backup_disabled: 'Облачная копия отключена', backup_restoring: 'Восстановление из облака…',
+      backup_confirm_disable: 'Отключить облачную копию? Копия на сервере будет удалена.',
+      backup_custom: 'Задать свой код',
+      backup_enter_new: 'Придумайте код: минимум 8 символов — буквы и цифры. Это пароль к копии: кто его знает, тот её и читает.',
+      backup_too_short: 'Минимум 8 символов (буквы и цифры)'
     },
     en: {
       sound_siren: 'Siren', sound_beep: 'Beep', sound_default: 'Default',
@@ -39,7 +54,22 @@
       check_scheduled: 'Check will run at %1$s:%2$s',
       warn_set: 'Warnings %1$s days before test',
       day_1: '%1$s day', day_24: '%1$s days', day_5: '%1$s days',
-      ios_hint: 'On iPhone: install the app to Home Screen (Share → Add to Home Screen), otherwise notifications will not work'
+      ios_hint: 'On iPhone: install the app to Home Screen (Share → Add to Home Screen), otherwise notifications will not work',
+      backup_title: 'Cloud backup', backup_on: 'On', backup_off: 'Off',
+      backup_desc: 'Encrypted copy of the registry on the notification server. The server only sees ciphertext — restoring requires your recovery code.',
+      backup_enable: 'Enable', backup_disable: 'Disable', backup_show_code: 'Show code',
+      backup_restore: 'Restore from cloud', backup_restore_code: 'Restore by code',
+      backup_code_title: 'Recovery code',
+      backup_code_msg: 'Write this code down and keep it separately — the backup cannot be restored without it:',
+      backup_enter_code: 'Enter recovery code',
+      backup_copy: 'Copy', copied: 'Copied',
+      backup_uploaded: 'Backup saved to cloud', backup_failed: 'Failed to save backup to cloud',
+      backup_not_found: 'Backup not found or wrong code', backup_invalid_code: 'Invalid code format',
+      backup_disabled: 'Cloud backup disabled', backup_restoring: 'Restoring from cloud…',
+      backup_confirm_disable: 'Disable cloud backup? The server copy will be deleted.',
+      backup_custom: 'Set own code',
+      backup_enter_new: 'Create a code: minimum 8 characters — letters and digits. It works like a password: anyone who knows it can read the backup.',
+      backup_too_short: 'Minimum 8 characters (letters and digits)'
     }
   };
 
@@ -72,7 +102,9 @@
     filter: '',
     alerts: [],
     alertIndex: 0,
-    soundOn: true
+    soundOn: true,
+    backupCode: '',
+    backupOn: false
   };
 
   const $ = id => document.getElementById(id);
@@ -93,7 +125,13 @@
     state.longNotification = SizDB.get('long_notification');
     const savedLang = SizDB.get('language');
     state.lang = savedLang || detectLang();
+    state.backupCode = SizDB.get('backup_code') || '';
+    state.backupOn = !!SizDB.get('backup_enabled') && !!state.backupCode;
   }
+
+  // Авто-бэкап: любая запись в БД планирует выгрузку копии в облако (дебаунс 10 с)
+  const _dbSet = SizDB.set.bind(SizDB);
+  SizDB.set = (k, v) => _dbSet(k, v).then(r => { scheduleBackupUpload(); return r; });
 
   function detectLang() {
     const nav = (navigator.language || 'ru').toLowerCase().slice(0, 2);
@@ -248,6 +286,7 @@
     music: 'M12 3v10.55A4 4 0 1 0 14 17V7h4V3z',
     lang: 'M11.99 2A10 10 0 1 0 22 12 10 10 0 0 0 11.99 2zm6.93 6h-2.95a15.65 15.65 0 0 0-1.38-3.56A8.03 8.03 0 0 1 18.92 8zM12 4.04A14.09 14.09 0 0 1 13.91 8h-3.82A14.09 14.09 0 0 1 12 4.04zM4.26 14a8.15 8.15 0 0 1 0-4h2.95a16.5 16.5 0 0 0 0 4zm.74 2h2.95a15.65 15.65 0 0 0 1.38 3.56A8.03 8.03 0 0 1 5 16zm2.95-2H4.26a8.15 8.15 0 0 1 0-4h3.69a16.5 16.5 0 0 0 0 4zm.63 6.56A15.65 15.65 0 0 0 7.2 16h2.95zm4.91-10.52A14.09 14.09 0 0 1 12 4.04zM12 19.96A14.09 14.09 0 0 1 10.09 16h3.82A14.09 14.09 0 0 1 12 19.96zM14.34 14H9.66a14.7 14.7 0 0 1 0-4h4.68a14.7 14.7 0 0 1 0 4zm.25 5.56A15.65 15.65 0 0 0 16.05 16h2.95a8.03 8.03 0 0 1-4.41 3.56zM16.79 14a16.5 16.5 0 0 0 0-4h2.95a8.15 8.15 0 0 1 0 4z',
     install: 'M5 20h14v-2H5zM19 9h-4V3H9v6H5l7 7z',
+    cloud: 'M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z',
     notif: 'M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6v-5a6 6 0 0 0-4.5-5.8V4.5a1.5 1.5 0 0 0-3 0v.7A6 6 0 0 0 6 11v5l-2 2v1h16v-1z',
     privacy: 'M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9z'
   };
@@ -632,6 +671,7 @@
         setRow('sTime', ICONS.alarm, t('check_time_title'), `${String(state.checkHour).padStart(2, '0')}:${String(state.checkMinute).padStart(2, '0')}`) + div() +
         setRow('sNotifType', ICONS.bell, t('notification_type_title'), t(state.longNotification ? 'notification_type_long' : 'notification_type_short')) + div() +
         setRow('sWarn', ICONS.settings, t('warning_days_title'), daysWord(state.warningDays)) + div() +
+        setRow('sBackup', ICONS.cloud, t('backup_title'), state.backupOn ? t('backup_on') : t('backup_off')) + div() +
         setRow('sRing', ICONS.music, t('ringtone_title'), ringtoneName) + div() +
         setRow('sLang', ICONS.lang, t('language_title'), langName) + div() +
         setRow('sPerm', ICONS.notif, t('notif_perm'), permText) + div() +
@@ -649,6 +689,7 @@
           async i => { state.longNotification = i === 1; await SizDB.set('long_notification', state.longNotification); });
       });
       m.querySelector('[data-r=sWarn]').addEventListener('click', () => { close(); showWarningDays(); });
+      m.querySelector('[data-r=sBackup]').addEventListener('click', () => { close(); showBackup(); });
       m.querySelector('[data-r=sRing]').addEventListener('click', () => { close(); showRingtone(); });
       m.querySelector('[data-r=sLang]').addEventListener('click', () => { close(); showLanguage(); });
       m.querySelector('[data-r=sPerm]').addEventListener('click', async () => {
@@ -792,8 +833,8 @@
   }
 
   // ===================== ЭКСПОРТ / ИМПОРТ =====================
-  function exportData() {
-    const data = {
+  function buildExportData() {
+    return {
       version: '1.0',
       exportDate: new Date().toISOString().replace('T', ' ').slice(0, 19),
       appInfo: { name: t('app_name'), version: '2.0-web' },
@@ -811,6 +852,10 @@
         testDate: i.testDate, isSubmitted: !!i.isSubmitted, postponedUntil: i.postponedUntil || 0
       }))
     };
+  }
+
+  function exportData() {
+    const data = buildExportData();
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -879,6 +924,25 @@
     return parseLegacyTxt(text);
   }
 
+  // Применить распарсенные данные (импорт файла и восстановление из облака)
+  async function applyData(data) {
+    state.items = data.items;
+    await saveItems();
+    const s = data.settings;
+    if (s) {
+      if (s.warningDays != null && !isNaN(s.warningDays)) { state.warningDays = s.warningDays; await SizDB.set('warning_days', s.warningDays); }
+      if (s.checkHour != null && s.checkMinute != null && !isNaN(s.checkHour)) {
+        state.checkHour = s.checkHour; state.checkMinute = s.checkMinute;
+        await Promise.all([SizDB.set('check_hour', s.checkHour), SizDB.set('check_minute', s.checkMinute)]);
+      }
+      if (s.ringtone && ['default', 'siren', 'beep'].includes(s.ringtone)) { state.ringtone = s.ringtone; await SizDB.set('ringtone', s.ringtone); }
+      if (s.submittedIds) { state.submittedIds = new Set(s.submittedIds.map(Number)); await saveSubmitted(); }
+      if (s.postponedItems) { state.postponed = s.postponedItems; await savePostponed(); }
+      if (s.originalDates) { state.originalDates = s.originalDates; await saveOriginalDates(); }
+    }
+    renderAll(); syncPush();
+  }
+
   async function doImport(file) {
     const text = await file.text();
     const data = parseImport(text);
@@ -888,23 +952,146 @@
     }
     const total = data.items.length;
     confirmDialog(t('import_confirm_title'), t('import_confirm_message', total), t('import_btn'), async () => {
-      state.items = data.items;
-      await saveItems();
-      const s = data.settings;
-      if (s) {
-        if (s.warningDays != null && !isNaN(s.warningDays)) { state.warningDays = s.warningDays; await SizDB.set('warning_days', s.warningDays); }
-        if (s.checkHour != null && s.checkMinute != null && !isNaN(s.checkHour)) {
-          state.checkHour = s.checkHour; state.checkMinute = s.checkMinute;
-          await Promise.all([SizDB.set('check_hour', s.checkHour), SizDB.set('check_minute', s.checkMinute)]);
-        }
-        if (s.ringtone && ['default', 'siren', 'beep'].includes(s.ringtone)) { state.ringtone = s.ringtone; await SizDB.set('ringtone', s.ringtone); }
-        if (s.submittedIds) { state.submittedIds = new Set(s.submittedIds.map(Number)); await saveSubmitted(); }
-        if (s.postponedItems) { state.postponed = s.postponedItems; await savePostponed(); }
-        if (s.originalDates) { state.originalDates = s.originalDates; await saveOriginalDates(); }
-      }
-      renderAll(); syncPush();
+      await applyData(data);
       toast(t('import_success', total));
     });
+  }
+
+  // ===================== ОБЛАЧНАЯ КОПИЯ =====================
+  let backupTimer = null;
+  function scheduleBackupUpload() {
+    if (!state.backupOn || !PUSH_SERVER_URL) return;
+    clearTimeout(backupTimer);
+    backupTimer = setTimeout(() => { backupTimer = null; uploadBackup(true); }, 10000);
+  }
+  async function uploadBackup(keepalive) {
+    try {
+      await SizBackup.upload(PUSH_SERVER_URL, state.backupCode, JSON.stringify(buildExportData()), keepalive);
+    } catch (e) {}
+  }
+
+  function showBackup() {
+    openModal((m, close) => {
+      const rows = state.backupOn
+        ? `<button class="btn btn-outline" style="width:100%;margin-top:8px" data-a="code">${esc(t('backup_show_code'))}</button>` +
+          `<button class="btn btn-outline" style="width:100%;margin-top:8px" data-a="restore">${esc(t('backup_restore'))}</button>` +
+          `<button class="btn btn-red" style="width:100%;margin-top:8px" data-a="off">${esc(t('backup_disable'))}</button>`
+        : `<button class="btn btn-blue" style="width:100%;margin-top:8px" data-a="on">${esc(t('backup_enable'))}</button>` +
+          `<button class="btn btn-outline" style="width:100%;margin-top:8px" data-a="custom">${esc(t('backup_custom'))}</button>` +
+          `<button class="btn btn-outline" style="width:100%;margin-top:8px" data-a="restore">${esc(t('backup_restore_code'))}</button>`;
+      m.innerHTML = `<h2>${esc(t('backup_title'))}</h2><div class="msg">${esc(t('backup_desc'))}</div>` + rows +
+        `<button class="btn btn-outline" style="width:100%;margin-top:8px" data-a="close">${esc(t('close'))}</button>`;
+      const on = (a, fn) => {
+        const b = m.querySelector(`[data-a=${a}]`);
+        if (b) b.addEventListener('click', () => { close(); fn(); });
+      };
+      on('on', () => enableBackup());
+      on('custom', showCustomCodePrompt);
+      on('off', () => confirmDialog(t('backup_title'), t('backup_confirm_disable'), t('backup_disable'), disableBackup, true));
+      on('restore', () => state.backupOn ? restoreFromCloud(state.backupCode) : showRestorePrompt());
+      on('code', () => showCodeDialog(state.backupCode));
+      on('close', () => {});
+    });
+  }
+
+  function showCodeDialog(code) {
+    openModal((m, close) => {
+      m.innerHTML = `<h2>${esc(t('backup_code_title'))}</h2>` +
+        `<div class="msg">${esc(t('backup_code_msg'))}</div>` +
+        `<div class="backup-code">${esc(code)}</div>` +
+        `<button class="btn btn-outline" style="width:100%;margin-top:8px" data-a="copy">${esc(t('backup_copy'))}</button>` +
+        `<button class="btn btn-blue" style="width:100%;margin-top:8px" data-a="ok">OK</button>`;
+      m.querySelector('[data-a=copy]').addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(code); toast(t('copied')); } catch (e) {}
+      });
+      m.querySelector('[data-a=ok]').addEventListener('click', close);
+    });
+  }
+
+  async function enableBackup(code) {
+    if (!PUSH_SERVER_URL) { toast(t('backup_failed')); return; }
+    const c = code || SizBackup.genCode();
+    state.backupCode = c;
+    state.backupOn = true;
+    await Promise.all([SizDB.set('backup_code', c), SizDB.set('backup_enabled', true)]);
+    showCodeDialog(c);
+    try {
+      const ok = await SizBackup.upload(PUSH_SERVER_URL, code, JSON.stringify(buildExportData()));
+      toast(ok ? t('backup_uploaded') : t('backup_failed'));
+    } catch (e) { toast(t('backup_failed')); }
+  }
+
+  async function disableBackup() {
+    const code = state.backupCode;
+    state.backupOn = false;
+    state.backupCode = '';
+    await Promise.all([SizDB.set('backup_enabled', false), SizDB.set('backup_code', '')]);
+    if (code && PUSH_SERVER_URL) SizBackup.remove(PUSH_SERVER_URL, code);
+    toast(t('backup_disabled'));
+  }
+
+  function showCustomCodePrompt() {
+    openModal((m, close) => {
+      m.innerHTML = `<h2>${esc(t('backup_custom'))}</h2>` +
+        `<div class="msg">${esc(t('backup_enter_new'))}</div>` +
+        `<input id="fCode" class="field-input" style="text-transform:uppercase">` +
+        `<div class="btn-row-modal"><button class="btn btn-outline" data-a="cancel">${esc(t('cancel'))}</button>` +
+        `<button class="btn btn-blue" data-a="ok">${esc(t('backup_enable'))}</button></div>`;
+      m.querySelector('[data-a=cancel]').addEventListener('click', close);
+      m.querySelector('[data-a=ok]').addEventListener('click', () => {
+        const norm = SizBackup.normalize(m.querySelector('#fCode').value);
+        if (norm.length < 8) { toast(t('backup_too_short')); return; }
+        close();
+        enableBackup(SizBackup.group(norm));
+      });
+      setTimeout(() => m.querySelector('#fCode').focus(), 50);
+    });
+  }
+
+  function showRestorePrompt() {
+    openModal((m, close) => {
+      m.innerHTML = `<h2>${esc(t('backup_restore_code'))}</h2>` +
+        `<input id="fCode" class="field-input" style="text-transform:uppercase" placeholder="${esc(t('backup_enter_code'))}">` +
+        `<div class="btn-row-modal"><button class="btn btn-outline" data-a="cancel">${esc(t('cancel'))}</button>` +
+        `<button class="btn btn-blue" data-a="ok">${esc(t('backup_restore'))}</button></div>`;
+      m.querySelector('[data-a=cancel]').addEventListener('click', close);
+      m.querySelector('[data-a=ok]').addEventListener('click', () => {
+        const code = m.querySelector('#fCode').value;
+        close();
+        restoreFromCloud(code);
+      });
+      setTimeout(() => m.querySelector('#fCode').focus(), 50);
+    });
+  }
+
+  async function restoreFromCloud(code) {
+    if (!PUSH_SERVER_URL) { toast(t('backup_failed')); return; }
+    const norm = SizBackup.normalize(code);
+    if (!SizBackup.isValidCode(norm)) { toast(t('backup_invalid_code')); return; }
+    toast(t('backup_restoring'));
+    let data = null;
+    try {
+      const text = await SizBackup.download(PUSH_SERVER_URL, norm);
+      data = text ? parseImport(text) : null;
+    } catch (e) { data = null; }
+    if (!data || !data.items.length) { toast(t('backup_not_found')); return; }
+    const apply = async () => {
+      await applyData(data);
+      if (state.backupCode !== norm) {
+        state.backupCode = norm;
+        await SizDB.set('backup_code', norm);
+      }
+      if (!state.backupOn) {
+        state.backupOn = true;
+        await SizDB.set('backup_enabled', true);
+      }
+      toast(t('import_success', data.items.length));
+    };
+    if (state.items.length) {
+      confirmDialog(t('import_confirm_title'), t('import_confirm_message', data.items.length), t('import_btn'), apply);
+    } else {
+      await apply();
+    }
   }
 
   // ===================== ВЫХОД =====================
@@ -926,6 +1113,14 @@
   // ===================== PWA =====================
   function registerSW() {
     if ('serviceWorker' in navigator) {
+      // Новая версия SW установилась и взяла управление -> один раз перезагружаем,
+      // чтобы страница сразу получила свежие файлы
+      let reloading = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (reloading) return;
+        reloading = true;
+        location.reload();
+      });
       navigator.serviceWorker.register('sw.js').then(() => registerPeriodicSync()).catch(() => {});
     }
     window.addEventListener('beforeinstallprompt', e => {
@@ -1003,11 +1198,26 @@
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) renderAll();
     });
+
+    // Дослать отложенную выгрузку бэкапа при закрытии страницы
+    window.addEventListener('pagehide', () => {
+      if (backupTimer) { clearTimeout(backupTimer); backupTimer = null; uploadBackup(true); }
+    });
   }
 
   // ===================== СТАРТ =====================
   async function init() {
     await loadState();
+    // Просим persistent-хранилище, чтобы браузер не выгружал данные при нехватке места
+    try { if (navigator.storage && navigator.storage.persist) await navigator.storage.persist(); } catch (e) {}
+    // Авто-восстановление: база пуста, но облачная копия включена -> тянем дамп
+    if (!state.items.length && state.backupOn && PUSH_SERVER_URL) {
+      try {
+        const text = await SizBackup.download(PUSH_SERVER_URL, state.backupCode);
+        const d = text ? parseImport(text) : null;
+        if (d && d.items.length) await applyData(d);
+      } catch (e) {}
+    }
     applyLang();
     bind();
     registerSW();

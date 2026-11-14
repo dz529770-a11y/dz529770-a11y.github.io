@@ -8,7 +8,7 @@
 importScripts('js/db.js');
 importScripts('js/core.js');
 
-const CACHE = 'siz-tracker-v2';
+const CACHE = 'siz-tracker-v3';
 const ASSETS = [
   './',
   'index.html',
@@ -16,6 +16,7 @@ const ASSETS = [
   'js/app.js',
   'js/core.js',
   'js/db.js',
+  'js/backup.js',
   'js/i18n.js',
   'manifest.webmanifest',
   'privacy.html',
