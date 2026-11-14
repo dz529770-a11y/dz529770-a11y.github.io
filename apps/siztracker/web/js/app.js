@@ -10,6 +10,8 @@
   const PUSH_SERVER_URL = 'https://siz-push.dz529770.workers.dev';
   // Публичный VAPID-ключ (base64url) — генерируется вместе с приватным (см. push-server/README.md)
   const PUSH_PUBLIC_KEY = 'BHgr8Y1ZvApiBa4aiJfaRdRX5nvJhLIGNTTSshgeTgvPbbR4hotEWH_ehAZvv_giYRTgE2oKAR3ljhpOzzff_3Q';
+  // Telegram-бот для дублирования напоминаний (заводится через @BotFather)
+  const TG_BOT = 'siztracker_bot';
 
   // Доп. строки, которых нет в Android strings.xml
   const EXTRA = {
@@ -40,7 +42,15 @@
       backup_confirm_disable: 'Отключить облачную копию? Копия на сервере будет удалена.',
       backup_custom: 'Задать свой код',
       backup_enter_new: 'Придумайте код: минимум 8 символов — буквы и цифры. Это пароль к копии: кто его знает, тот её и читает.',
-      backup_too_short: 'Минимум 8 символов (буквы и цифры)'
+      backup_too_short: 'Минимум 8 символов (буквы и цифры)',
+      tg_desc: 'Дублирует напоминания в Telegram через бота — доходит, даже если браузерные уведомления не сработали. Сообщение обезличенное: детали только в приложении.',
+      tg_connect: 'Подключить Telegram', tg_disconnect: 'Отключить',
+      tg_connected: 'Telegram подключён', tg_disconnected: 'Telegram отключён',
+      tg_link_title: 'Подключение Telegram',
+      tg_link_msg: 'Откройте бота и нажмите Start — либо отправьте ему этот код:',
+      tg_open_bot: 'Открыть бота', tg_checking: 'Ждём подключения…',
+      tg_need_notif: 'Сначала разрешите уведомления', tg_failed: 'Ошибка связи с сервером',
+      tg_status_on: 'Подключён', tg_status_off: 'Не подключён'
     },
     en: {
       sound_siren: 'Siren', sound_beep: 'Beep', sound_default: 'Default',
@@ -69,7 +79,15 @@
       backup_confirm_disable: 'Disable cloud backup? The server copy will be deleted.',
       backup_custom: 'Set own code',
       backup_enter_new: 'Create a code: minimum 8 characters — letters and digits. It works like a password: anyone who knows it can read the backup.',
-      backup_too_short: 'Minimum 8 characters (letters and digits)'
+      backup_too_short: 'Minimum 8 characters (letters and digits)',
+      tg_desc: 'Duplicates reminders to Telegram via a bot — arrives even if browser notifications fail. The message is anonymous: details stay in the app.',
+      tg_connect: 'Connect Telegram', tg_disconnect: 'Disconnect',
+      tg_connected: 'Telegram connected', tg_disconnected: 'Telegram disconnected',
+      tg_link_title: 'Connect Telegram',
+      tg_link_msg: 'Open the bot and press Start — or send it this code:',
+      tg_open_bot: 'Open bot', tg_checking: 'Waiting for connection…',
+      tg_need_notif: 'Allow notifications first', tg_failed: 'Server connection error',
+      tg_status_on: 'Connected', tg_status_off: 'Not connected'
     }
   };
 
@@ -104,7 +122,8 @@
     alertIndex: 0,
     soundOn: true,
     backupCode: '',
-    backupOn: false
+    backupOn: false,
+    tgLinked: false
   };
 
   const $ = id => document.getElementById(id);
@@ -127,6 +146,7 @@
     state.lang = savedLang || detectLang();
     state.backupCode = SizDB.get('backup_code') || '';
     state.backupOn = !!SizDB.get('backup_enabled') && !!state.backupCode;
+    state.tgLinked = !!SizDB.get('tg_linked');
   }
 
   // Авто-бэкап: любая запись в БД планирует выгрузку копии в облако (дебаунс 10 с)
@@ -287,6 +307,7 @@
     lang: 'M11.99 2A10 10 0 1 0 22 12 10 10 0 0 0 11.99 2zm6.93 6h-2.95a15.65 15.65 0 0 0-1.38-3.56A8.03 8.03 0 0 1 18.92 8zM12 4.04A14.09 14.09 0 0 1 13.91 8h-3.82A14.09 14.09 0 0 1 12 4.04zM4.26 14a8.15 8.15 0 0 1 0-4h2.95a16.5 16.5 0 0 0 0 4zm.74 2h2.95a15.65 15.65 0 0 0 1.38 3.56A8.03 8.03 0 0 1 5 16zm2.95-2H4.26a8.15 8.15 0 0 1 0-4h3.69a16.5 16.5 0 0 0 0 4zm.63 6.56A15.65 15.65 0 0 0 7.2 16h2.95zm4.91-10.52A14.09 14.09 0 0 1 12 4.04zM12 19.96A14.09 14.09 0 0 1 10.09 16h3.82A14.09 14.09 0 0 1 12 19.96zM14.34 14H9.66a14.7 14.7 0 0 1 0-4h4.68a14.7 14.7 0 0 1 0 4zm.25 5.56A15.65 15.65 0 0 0 16.05 16h2.95a8.03 8.03 0 0 1-4.41 3.56zM16.79 14a16.5 16.5 0 0 0 0-4h2.95a8.15 8.15 0 0 1 0 4z',
     install: 'M5 20h14v-2H5zM19 9h-4V3H9v6H5l7 7z',
     cloud: 'M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z',
+    send: 'M2.01 21 23 12 2.01 3 2 10l15 2-15 2z',
     notif: 'M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6v-5a6 6 0 0 0-4.5-5.8V4.5a1.5 1.5 0 0 0-3 0v.7A6 6 0 0 0 6 11v5l-2 2v1h16v-1z',
     privacy: 'M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9z'
   };
@@ -632,11 +653,19 @@
           checkMinute: state.checkMinute,
           tzOffset: new Date().getTimezoneOffset(),
           lang: state.lang,
+          appUrl: location.origin + location.pathname,
           nextDueTs: SizCore.nextDueTs(state.items, {
             submittedIds: state.submittedIds, postponedItems: state.postponed, warningDays: state.warningDays
           })
         })
       });
+      // Обновить локальный флаг привязки Telegram
+      fetchTgStatus(j.endpoint).then(async l => {
+        if (l !== null && l !== state.tgLinked) {
+          state.tgLinked = l;
+          await SizDB.set('tg_linked', l);
+        }
+      }).catch(() => {});
     } catch (e) {}
   }
 
@@ -672,6 +701,7 @@
         setRow('sNotifType', ICONS.bell, t('notification_type_title'), t(state.longNotification ? 'notification_type_long' : 'notification_type_short')) + div() +
         setRow('sWarn', ICONS.settings, t('warning_days_title'), daysWord(state.warningDays)) + div() +
         setRow('sBackup', ICONS.cloud, t('backup_title'), state.backupOn ? t('backup_on') : t('backup_off')) + div() +
+        setRow('sTg', ICONS.send, 'Telegram', state.tgLinked ? t('tg_status_on') : t('tg_status_off')) + div() +
         setRow('sRing', ICONS.music, t('ringtone_title'), ringtoneName) + div() +
         setRow('sLang', ICONS.lang, t('language_title'), langName) + div() +
         setRow('sPerm', ICONS.notif, t('notif_perm'), permText) + div() +
@@ -690,6 +720,7 @@
       });
       m.querySelector('[data-r=sWarn]').addEventListener('click', () => { close(); showWarningDays(); });
       m.querySelector('[data-r=sBackup]').addEventListener('click', () => { close(); showBackup(); });
+      m.querySelector('[data-r=sTg]').addEventListener('click', () => { close(); showTelegram(); });
       m.querySelector('[data-r=sRing]').addEventListener('click', () => { close(); showRingtone(); });
       m.querySelector('[data-r=sLang]').addEventListener('click', () => { close(); showLanguage(); });
       m.querySelector('[data-r=sPerm]').addEventListener('click', async () => {
@@ -1093,6 +1124,97 @@
       await apply();
     }
   }
+
+  // ===================== TELEGRAM =====================
+  async function getPushEndpoint() {
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription();
+      return sub ? sub.endpoint : null;
+    } catch (e) { return null; }
+  }
+
+  async function fetchTgStatus(endpoint) {
+    const r = await fetch(PUSH_SERVER_URL + '/tgstatus?endpoint=' + encodeURIComponent(endpoint));
+    if (!r.ok) return null;
+    const j = await r.json();
+    return !!(j && j.linked);
+  }
+
+  function showTelegram() {
+    openModal(async (m, close) => {
+      const body = `<div class="msg">${esc(t('tg_checking'))}</div>`;
+      m.innerHTML = `<h2>Telegram</h2><div class="msg">${esc(t('tg_desc'))}</div><div id="tgBox">${body}</div>` +
+        `<button class="btn btn-outline" style="width:100%;margin-top:8px" data-a="close">${esc(t('close'))}</button>`;
+      m.querySelector('[data-a=close]').addEventListener('click', () => { clearInterval(pollTimer); close(); });
+
+      const box = m.querySelector('#tgBox');
+      const endpoint = await getPushEndpoint();
+      let linked = false;
+      if (endpoint && PUSH_SERVER_URL) {
+        try { linked = (await fetchTgStatus(endpoint)) === true; } catch (e) {}
+      }
+      state.tgLinked = linked;
+      SizDB.set('tg_linked', linked);
+
+      if (linked) {
+        box.innerHTML = `<button class="btn btn-red" style="width:100%;margin-top:8px" data-a="un">${esc(t('tg_disconnect'))}</button>`;
+        box.querySelector('[data-a=un]').addEventListener('click', async () => {
+          try { await fetch(PUSH_SERVER_URL + '/untg', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ endpoint }) }); } catch (e) {}
+          state.tgLinked = false;
+          await SizDB.set('tg_linked', false);
+          clearInterval(pollTimer);
+          close();
+          toast(t('tg_disconnected'));
+        });
+        return;
+      }
+
+      const needsPerm = notifPermissionState() !== 'granted';
+      box.innerHTML =
+        (needsPerm ? `<div class="msg">${esc(t('tg_need_notif'))}</div>` : '') +
+        `<button class="btn btn-blue" style="width:100%;margin-top:8px" data-a="go">${esc(t(needsPerm ? 'notif_perm' : 'tg_connect'))}</button>`;
+      box.querySelector('[data-a=go]').addEventListener('click', async () => {
+        if (needsPerm) {
+          const ok = await ensureNotifPermission();
+          if (ok) { await registerPeriodicSync(); await syncPush(); }
+          close();
+          if (ok) showTelegram();
+          else toast(t('tg_need_notif'));
+          return;
+        }
+        const ep = await getPushEndpoint() || (await syncPush(), await getPushEndpoint());
+        if (!ep) { toast(t('tg_failed')); return; }
+        const code = SizBackup.genCode().replace(/-/g, '').slice(0, 12);
+        const pairHash = await SizBackup.sha256('siz-tg:' + code);
+        try {
+          const r = await fetch(PUSH_SERVER_URL + '/tgpair', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ endpoint: ep, pairHash })
+          });
+          if (!r.ok) throw new Error();
+        } catch (e) { toast(t('tg_failed')); return; }
+        const link = `https://t.me/${TG_BOT}?start=${code}`;
+        box.innerHTML = `<div class="msg">${esc(t('tg_link_msg'))}</div>` +
+          `<div class="backup-code">${esc(SizBackup.group(code))}</div>` +
+          `<a href="${esc(link)}" target="_blank" rel="noopener" class="btn btn-blue" style="width:100%;margin-top:8px;display:block;text-align:center;text-decoration:none;line-height:44px">${esc(t('tg_open_bot'))}</a>` +
+          `<div class="msg" style="margin-top:8px">${esc(t('tg_checking'))}</div>`;
+        clearInterval(pollTimer);
+        pollTimer = setInterval(async () => {
+          try {
+            if (await fetchTgStatus(ep)) {
+              clearInterval(pollTimer);
+              state.tgLinked = true;
+              await SizDB.set('tg_linked', true);
+              close();
+              toast(t('tg_connected'));
+            }
+          } catch (e) {}
+        }, 4000);
+      });
+    });
+  }
+  let pollTimer = null;
 
   // ===================== ВЫХОД =====================
   function exitApp() {

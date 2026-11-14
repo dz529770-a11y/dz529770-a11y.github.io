@@ -118,7 +118,7 @@
     } catch (e) {}
   }
 
-  const api = { genCode, normalize, isValidCode, group, encryptText, decryptText, upload, download, remove };
+  const api = { genCode, normalize, isValidCode, group, sha256: sha256hex, encryptText, decryptText, upload, download, remove };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.SizBackup = api;
 })(typeof self !== 'undefined' ? self : this);

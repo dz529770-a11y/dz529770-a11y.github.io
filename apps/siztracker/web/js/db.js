@@ -21,7 +21,8 @@
     long_notification: true,
     language: '',         // '' = авто (из браузера)
     backup_enabled: false,
-    backup_code: ''       // код восстановления облачной копии
+    backup_code: '',      // код восстановления облачной копии
+    tg_linked: false      // Telegram-напоминания привязаны
   };
 
   let cache = null;
